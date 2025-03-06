@@ -10,15 +10,17 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    var coordinator: Coordinator?
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = CharactersViewController()
-        window?.makeKeyAndVisible()
+        
+        let charactersFactory: CharactersSceneFactory = DefaultCharactersSceneFactory()
+        coordinator = DefaultCoordinator(charactersSceneFactory: charactersFactory)
+        coordinator?.start()
+        
         return true
     }
 }
