@@ -4,16 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "Domain",
+    name: "Data",
     products: [
         .library(
-            name: "Domain",
-            targets: ["Domain"]
+            name: "Data",
+            targets: ["Data"]
         )
+    ],
+    dependencies: [
+        .package(path: "../Domain")
     ],
     targets: [
         .target(
-            name: "Domain"
+            name: "Data",
+            dependencies: ["Domain"]
         )
     ]
 )
