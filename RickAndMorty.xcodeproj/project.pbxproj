@@ -21,7 +21,7 @@
 		E2F512882D79F46B009CB0A0 /* Exceptions for "RickAndMorty" folder in "RickAndMorty" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Core/Configuration/Info.plist,
 			);
 			target = E2F512752D79F46A009CB0A0 /* RickAndMorty */;
 		};
@@ -172,7 +172,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SV7KV5RC96;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RickAndMorty/Info.plist;
+				INFOPLIST_FILE = RickAndMorty/Core/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -199,7 +199,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SV7KV5RC96;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RickAndMorty/Info.plist;
+				INFOPLIST_FILE = RickAndMorty/Core/Configuration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

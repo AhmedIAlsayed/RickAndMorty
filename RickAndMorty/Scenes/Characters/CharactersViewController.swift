@@ -6,16 +6,12 @@
 //
 
 import UIKit
-import Domain
 
-class ViewController: UIViewController {
-    
-    private let example = Example()
+final class CharactersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .red
+        view.backgroundColor = .orange
     }
 }
-
