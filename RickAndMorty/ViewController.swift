@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Domain
 
 class ViewController: UIViewController {
+    
+    private let example = Example()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E29ED3FD2D7A2CC200602086 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = E29ED3FC2D7A2CC200602086 /* Domain */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		E29ED3FA2D79FAE700602086 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		E2F512762D79F46A009CB0A0 /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -36,16 +41,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E29ED3FD2D7A2CC200602086 /* Domain in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E29ED3FB2D7A2CC200602086 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E2F5126D2D79F46A009CB0A0 = {
 			isa = PBXGroup;
 			children = (
+				E29ED3FA2D79FAE700602086 /* Domain */,
 				E2F512782D79F46A009CB0A0 /* RickAndMorty */,
+				E29ED3FB2D7A2CC200602086 /* Frameworks */,
 				E2F512772D79F46A009CB0A0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -78,6 +93,7 @@
 			);
 			name = RickAndMorty;
 			packageProductDependencies = (
+				E29ED3FC2D7A2CC200602086 /* Domain */,
 			);
 			productName = RickAndMorty;
 			productReference = E2F512762D79F46A009CB0A0 /* RickAndMorty.app */;
@@ -333,6 +349,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E29ED3FC2D7A2CC200602086 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E2F5126E2D79F46A009CB0A0 /* Project object */;
 }
