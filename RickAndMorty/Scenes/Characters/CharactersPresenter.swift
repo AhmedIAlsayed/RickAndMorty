@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 protocol CharactersPresenter: AnyObject {
     var view: CharacterView? { get set }
@@ -20,6 +21,12 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     // MARK: Private Properties
     
+    private let fetchCharactersUseCase: FetchCharactersUseCase
+    
+    /// An integer that captures the state of the `currently fetched page` from our endpoint.
+    ///
+    private var currentPage: Int = 1
+    
     private(set) var characters: [CharacterPresentationModel] = [] {
         didSet { reload() }
     }
@@ -28,14 +35,17 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     weak var view: CharacterView?
     
+    /// This title is statically typed, it would usually read from a localized data-source.
+    /// i.e: `R.localized` or the String assets.
+    ///
     var title: String {
         return "Characters"
     }
     
     // MARK: Constructor
     
-    init() {
-        
+    init(fetchCharactersUseCase: FetchCharactersUseCase) {
+        self.fetchCharactersUseCase = fetchCharactersUseCase
     }
     
     // MARK: Public Interfaces
@@ -51,26 +61,16 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     // MARK: Private Implementations
     
     private func fetchCharacters() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-            self.characters.append(contentsOf: [
-                CharacterPresentationModel(id: "", imageURLString: "", title: "Adlskfds", subtitle: "ryt"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "fsdfdsf", subtitle: "iuy"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "kjhhj", subtitle: "dsfsdfsd"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "khjjh", subtitle: "ryueyt"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "hdgffgh", subtitle: "urteu"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "hfghfg", subtitle: "gasdg"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "rwerw", subtitle: "fsgd"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "cbvcv", subtitle: "fdsfds"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "645gf", subtitle: "gg"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "rujer", subtitle: "jgh"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "hgfdfg", subtitle: "gweg"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "iyuiy", subtitle: "hfghgf"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "KLDFS", subtitle: "sdg"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "gfhfg", subtitle: "DV"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "OIU", subtitle: "oiu"),
-                CharacterPresentationModel(id: "", imageURLString: "", title: "tykr", subtitle: "LUI"),
-            ])
-        })
+        Task(priority: .background) {
+            do {
+                characters = try await fetchCharactersUseCase
+                    .execute(for: currentPage)
+                    .map(CharacterPresentationModel.init)
+            }
+            catch {
+                print(error)
+            }
+        }
     }
     
     private func reload() {

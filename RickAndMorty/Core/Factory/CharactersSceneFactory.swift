@@ -6,12 +6,16 @@
 //
 
 import UIKit
+import Domain
+import Data
 
 protocol CharactersSceneFactory {
     func createCharactersScene() -> CharactersViewController
 }
 
 final class DefaultCharactersSceneFactory: CharactersSceneFactory {
+    
+    // MARK: Public Interface
     
     func createCharactersScene() -> CharactersViewController {
         let presenter = createCharactersPresenter()
@@ -20,7 +24,19 @@ final class DefaultCharactersSceneFactory: CharactersSceneFactory {
         return viewController
     }
     
+    // MARK: Public Implementations
+    
     private func createCharactersPresenter() -> CharactersPresenter {
-        return DefaultCharactersPresenter()
+        let useCase = createFetchCharactersUseCase()
+        return DefaultCharactersPresenter(fetchCharactersUseCase: useCase)
+    }
+    
+    private func createFetchCharactersUseCase() -> FetchCharactersUseCase {
+        let repository = createCharactersRepository()
+        return DefaultFetchCharactersUseCase(charactersRepository: repository)
+    }
+    
+    private func createCharactersRepository() -> CharactersRepository {
+        return DefaultCharactersRepository()
     }
 }
