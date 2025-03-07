@@ -14,6 +14,13 @@ protocol CharactersSceneFactory {
 final class DefaultCharactersSceneFactory: CharactersSceneFactory {
     
     func createCharactersScene() -> CharactersViewController {
-        return CharactersViewController()
+        let presenter = createCharactersPresenter()
+        let viewController = CharactersViewController(presenter: presenter)
+        presenter.view = viewController
+        return viewController
+    }
+    
+    private func createCharactersPresenter() -> CharactersPresenter {
+        return DefaultCharactersPresenter()
     }
 }
