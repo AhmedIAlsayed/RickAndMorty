@@ -36,7 +36,7 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     weak var view: CharacterView?
     
     /// This title is statically typed, it would usually read from a localized data-source.
-    /// i.e: `R.localized` or the String assets.
+    /// i.e: `R.localized` or the `String assets`.
     ///
     var title: String {
         return "Characters"
@@ -64,7 +64,7 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         Task(priority: .background) {
             do {
                 characters = try await fetchCharactersUseCase
-                    .execute(for: currentPage)
+                    .execute(at: currentPage)
                     .map(CharacterPresentationModel.init)
             }
             catch {

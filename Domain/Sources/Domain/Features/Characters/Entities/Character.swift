@@ -8,13 +8,13 @@
 import Foundation
 
 public struct Character {
-    public let id: String
+    public let id: Int
     public let imageURLString: String
     public let title: String
     public let subtitle: String
     
     public init(
-        id: String,
+        id: Int,
         imageURLString: String,
         title: String,
         subtitle: String

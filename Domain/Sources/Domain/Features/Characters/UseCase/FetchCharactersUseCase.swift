@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol FetchCharactersUseCase {
-    func execute(for page: Int) async throws -> [Character]
+    func execute(at page: Int) async throws -> [Character]
 }
 
 public final class DefaultFetchCharactersUseCase: FetchCharactersUseCase {
@@ -19,7 +19,7 @@ public final class DefaultFetchCharactersUseCase: FetchCharactersUseCase {
         self.charactersRepository = charactersRepository
     }
     
-    public func execute(for page: Int) async throws -> [Character] {
-        try await charactersRepository.fetchCharacters(for: page)
+    public func execute(at page: Int) async throws -> [Character] {
+        try await charactersRepository.fetchCharacters(at: page)
     }
 }

@@ -8,7 +8,7 @@
 import Domain
 
 struct CharacterPresentationModel {
-    let id: String
+    let id: Int
     let imageURLString: String
     let title: String
     let subtitle: String
