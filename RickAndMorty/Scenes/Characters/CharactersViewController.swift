@@ -109,6 +109,11 @@ extension CharactersViewController: UITableViewDataSource {
             for: indexPath
         ) as! CharacterTableViewCell
         
+        /// Method injecting the reference of an ImageLoader, since we can't opt for
+        /// constructor injection in cells due it's dequeuing behaviour.
+        ///
+        cell.setImageLoader()
+        
         presenter.configure(view: cell, at: indexPath.row)
         
         return cell
@@ -180,6 +185,7 @@ extension CharactersViewController: UICollectionViewDataSource {
 extension CharactersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         presenter.didSelectItem(at: indexPath.item)
     }
     

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Network
 
 protocol CharacterItemView {
     func configure(with character: CharacterPresentationModel)
@@ -19,7 +20,6 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         let view = UIView()
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = randomColor()
         return view
     }()
     
@@ -27,7 +27,7 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .cyan
+        imageView.backgroundColor = .cyan.withAlphaComponent(0.05)
         imageView.layer.cornerRadius = 16
         return imageView
     }()
@@ -64,6 +64,14 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         return stackView
     }()
     
+    /// Captures the reference of the currently running `URLSessionDataTask`'s `URL` string.
+    /// This reference will be used to call cancel on the specific request.
+    ///
+    private var currentlyRunningTask: String?
+    
+    // TODO: Invert this dependency!!!
+    var imageLoader: ImageLoader!
+    
     // MARK: Constructor
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -77,14 +85,66 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Lifetime Events
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        characterImageView.image = nil
+        
+        /// Make sure to `cancel` the request first before nullifying it's reference within the cell.
+        ///
+        if let currentlyRunningTask {
+            imageLoader.cancel(request: currentlyRunningTask)
+        }
+        
+        currentlyRunningTask = nil
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        configureInterfaceElements()
+    }
+    
     // MARK: Public Interface
     
+    /// Injecting the reference of an `ImageLoader` instead of statically locating it's reference.
+    ///
+    func setImageLoader(_ loader: ImageLoader = DefaultImageLoader.shared) {
+        self.imageLoader = loader
+    }
+    
     func configure(with character: CharacterPresentationModel) {
+        containerView.backgroundColor = character.backgroundColor
         titleLabel.text = character.title
         subtitleLabel.text = character.subtitle
+        
+        if !character.imageURLString.isEmpty {
+            currentlyRunningTask = character.imageURLString
+            
+            imageLoader.load(
+                image: character.imageURLString,
+                completion: { [weak self] image in
+                    guard let self else { return }
+                    
+                    if let image {
+                        /// The image is returned on the `Main Thread`,
+                        /// so it's safe to consume it directly here without taking any concurrency concerns.
+                        ///
+                        self.characterImageView.image = image
+                    }
+                }
+            )
+        }
     }
     
     // MARK: Private Properties
+    
+    private func configureInterfaceElements() {
+        characterImageView.layer.cornerRadius = 12
+        characterImageView.clipsToBounds = true
+    }
     
     private func layoutConstraints() {
         configureContainerViewLayout()

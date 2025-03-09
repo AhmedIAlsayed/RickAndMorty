@@ -6,8 +6,8 @@
 //
 
 enum FilterState: String, CaseIterable {
-    case alive = "Alive"
-    case dead = "Dead"
-    case corrupted = "Corrupted"
-    case unknown = "Unknown"
+    case human = "Human"
+    case animal = "Animal"
+    case robot = "Robot"
+    case unknown = "unknown"
 }

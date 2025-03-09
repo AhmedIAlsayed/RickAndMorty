@@ -13,6 +13,11 @@ struct CharacterPresentationModel {
     let title: String
     let subtitle: String
     
+    /// The value is set here so it becomes a constant and `does not mutate between renders`
+    /// and would result in flickering in the `backgroundColor`.
+    ///
+    let backgroundColor = randomColor()
+    
     init(_ character: Domain.Character) {
         self.id = character.id
         self.imageURLString = character.imageURLString

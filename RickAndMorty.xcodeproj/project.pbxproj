@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		E230FD8D2D7A2F0700A0CF23 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = E230FD8C2D7A2F0700A0CF23 /* Data */; };
 		E230FD8F2D7A2F0700A0CF23 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = E230FD8E2D7A2F0700A0CF23 /* Domain */; };
+		E230FE912D7D266800A0CF23 /* Network in Frameworks */ = {isa = PBXBuildFile; productRef = E230FE902D7D266800A0CF23 /* Network */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E230FD832D7A2E1900A0CF23 /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
+		E230FE8F2D7D25E800A0CF23 /* Network */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Network; sourceTree = "<group>"; };
 		E29ED3FA2D79FAE700602086 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		E2F512762D79F46A009CB0A0 /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E230FE912D7D266800A0CF23 /* Network in Frameworks */,
 				E230FD8F2D7A2F0700A0CF23 /* Domain in Frameworks */,
 				E230FD8D2D7A2F0700A0CF23 /* Data in Frameworks */,
 			);
@@ -61,6 +64,7 @@
 		E2F5126D2D79F46A009CB0A0 = {
 			isa = PBXGroup;
 			children = (
+				E230FE8F2D7D25E800A0CF23 /* Network */,
 				E230FD832D7A2E1900A0CF23 /* Data */,
 				E29ED3FA2D79FAE700602086 /* Domain */,
 				E2F512782D79F46A009CB0A0 /* RickAndMorty */,
@@ -99,6 +103,7 @@
 			packageProductDependencies = (
 				E230FD8C2D7A2F0700A0CF23 /* Data */,
 				E230FD8E2D7A2F0700A0CF23 /* Domain */,
+				E230FE902D7D266800A0CF23 /* Network */,
 			);
 			productName = RickAndMorty;
 			productReference = E2F512762D79F46A009CB0A0 /* RickAndMorty.app */;
@@ -378,6 +383,10 @@
 		E230FD8E2D7A2F0700A0CF23 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		E230FE902D7D266800A0CF23 /* Network */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Network;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
