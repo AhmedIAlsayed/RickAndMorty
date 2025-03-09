@@ -12,8 +12,6 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     // MARK: Private Properties
     
-    private let fetchCharactersUseCase: FetchCharactersUseCase
-    
     /// A counter that captures the state of the `currently fetched page` from the endpoint.
     ///
     private var currentPage: Int = 1
@@ -55,10 +53,17 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         didSet { reload() }
     }
     
+    /// ``External Dependencies``
+    ///
+    private let fetchCharactersUseCase: FetchCharactersUseCase
+    
+    private let coordinator: Coordinator
+    
     // MARK: Constructor
     
-    init(fetchCharactersUseCase: FetchCharactersUseCase) {
+    init(fetchCharactersUseCase: FetchCharactersUseCase, coordinator: Coordinator) {
         self.fetchCharactersUseCase = fetchCharactersUseCase
+        self.coordinator = coordinator
     }
     
     // MARK: Public Interfaces
@@ -86,6 +91,10 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     }
     
     func didSelectItem(at index: Int) {
+        coordinator.navigateToDetails(with: filteredCharacters[index])
+    }
+    
+    func didSelectFilter(at index: Int) {
         let selectedFilter = FilterState.allCases[index]
         
         /// Persist the `user-selected` filter option and then apply the filtration.

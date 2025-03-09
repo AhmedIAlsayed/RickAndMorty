@@ -20,4 +20,5 @@ protocol CharactersPresenter: AnyObject {
     func configure(view: FilterItemView, at item: Int)
     func prefetchRows(at indexPaths: [IndexPath])
     func didSelectItem(at index: Int)
+    func didSelectFilter(at index: Int)
 }

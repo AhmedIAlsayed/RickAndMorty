@@ -137,6 +137,10 @@ extension CharactersViewController: UITableViewDataSource {
 
 extension CharactersViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        presenter.didSelectItem(at: indexPath.row)
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(
             withIdentifier: CharactersConstants.headerReuseIdentifier
@@ -194,7 +198,7 @@ extension CharactersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        presenter.didSelectItem(at: indexPath.item)
+        presenter.didSelectFilter(at: indexPath.item)
     }
     
     func collectionView(
