@@ -69,14 +69,14 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
     ///
     private var currentlyRunningTask: String?
     
-    // TODO: Invert this dependency!!!
-    var imageLoader: ImageLoader!
+    /// `Optional` since this dependency is injected later-on during the lifetime of this cell.
+    ///
+    private var imageLoader: ImageLoader?
     
     // MARK: Constructor
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
         
         layoutConstraints()
     }
@@ -94,7 +94,7 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         
         /// Make sure to `cancel` the request first before nullifying it's reference within the cell.
         ///
-        if let currentlyRunningTask {
+        if let imageLoader, let currentlyRunningTask {
             imageLoader.cancel(request: currentlyRunningTask)
         }
         
@@ -120,7 +120,7 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
         titleLabel.text = character.title
         subtitleLabel.text = character.subtitle
         
-        if !character.imageURLString.isEmpty {
+        if let imageLoader, !character.imageURLString.isEmpty {
             currentlyRunningTask = character.imageURLString
             
             imageLoader.load(
@@ -147,6 +147,8 @@ final class CharacterTableViewCell: UITableViewCell, CharacterItemView {
     }
     
     private func layoutConstraints() {
+        selectionStyle = .none
+        
         configureContainerViewLayout()
         configureContentStackViewLayout()
         configureLabelsStackViewLayout()

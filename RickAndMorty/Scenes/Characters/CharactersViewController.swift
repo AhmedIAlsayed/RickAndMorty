@@ -54,7 +54,7 @@ final class CharactersViewController: UIViewController, CharacterView {
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = presenter.title
+        navigationItem.title = CharactersConstants.title
         
         if let navigationBar = navigationController?.navigationBar {
             let appearance = UINavigationBarAppearance()
@@ -100,10 +100,23 @@ final class CharactersViewController: UIViewController, CharacterView {
 extension CharactersViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.filteredCharacters.count
+        presenter.numberOfCharacters
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if presenter.shouldDisplayEmptyState {
+            return emptyCell()
+        }
+        else {
+            return characterCell(tableView, at: indexPath)
+        }
+    }
+    
+    private func emptyCell() -> EmptyTableViewCell {
+        return EmptyTableViewCell()
+    }
+    
+    private func characterCell(_ tableView: UITableView, at indexPath: IndexPath) -> CharacterTableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: CharactersConstants.characterCellReuseIdentifier,
             for: indexPath
@@ -151,12 +164,7 @@ extension CharactersViewController: UITableViewDelegate {
 extension CharactersViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        let thresholdIndex = (presenter.filteredCharacters.count - 2)
-        let shouldPaginate = indexPaths.contains { $0.row > thresholdIndex }
-        
-        if shouldPaginate {
-            presenter.prefetch()
-        }
+        presenter.prefetchRows(at: indexPaths)
     }
 }
 
@@ -165,19 +173,19 @@ extension CharactersViewController: UITableViewDataSourcePrefetching {
 extension CharactersViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.filtersCount
+        return presenter.numberOfFilters
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: CharactersConstants.filterCellReuseIdentifier,
-        for: indexPath
-    ) as! FilterCollectionViewCell
-    
-    presenter.configure(view: cell, at: indexPath.item)
-    
-    return cell
-}
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: CharactersConstants.filterCellReuseIdentifier,
+            for: indexPath
+        ) as! FilterCollectionViewCell
+        
+        presenter.configure(view: cell, at: indexPath.item)
+        
+        return cell
+    }
 }
 
 // MARK: CollectionView Delegate

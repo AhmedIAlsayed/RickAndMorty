@@ -1,26 +1,12 @@
 //
-//  CharactersPresenter.swift
+//  DefaultCharactersPresenter.swift
 //  RickAndMorty
 //
-//  Created by Ahmed on 07/03/2025.
+//  Created by Ahmed on 09/03/2025.
 //
 
 import Foundation
 import Domain
-
-protocol CharactersPresenter: AnyObject {
-    var view: CharacterView? { get set }
-    var title: String { get }
-    var filteredCharacters: [CharacterPresentationModel] { get }
-    var filtersCount: Int { get }
-    
-    func viewDidLoad()
-    func configure(view: CharacterItemView, at row: Int)
-    func configure(view: FilterItemView, at item: Int)
-    func title(at item: Int) -> String
-    func prefetch()
-    func didSelectItem(at index: Int)
-}
 
 final class DefaultCharactersPresenter: CharactersPresenter {
     
@@ -28,7 +14,7 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     private let fetchCharactersUseCase: FetchCharactersUseCase
     
-    /// An integer that captures the state of the `currently fetched page` from our endpoint.
+    /// A counter that captures the state of the `currently fetched page` from the endpoint.
     ///
     private var currentPage: Int = 1
     
@@ -46,24 +32,26 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     weak var view: CharacterView?
     
-    /// This title is statically typed, it would usually read from a localized data-source.
-    /// i.e: `R.localized` or the `String assets`.
-    ///
-    var title: String {
-        return "Characters"
-    }
-    
     /// I've made the assumption that the list of filtering options are `static`.
     /// Usually this sort of ambiguity would be sorted out during the feature's requirement's alignment and we would ask any clarifying questions.
     /// For the sake of demonstration, I'll keep them a fixed number.
     ///
-    var filtersCount: Int {
+    var numberOfFilters: Int {
         return FilterState.allCases.count
+    }
+    
+    var numberOfCharacters: Int {
+        if filteredCharacters.isEmpty { return 1 }
+        else { return filteredCharacters.count }
+    }
+    
+    var shouldDisplayEmptyState: Bool {
+        return filteredCharacters.isEmpty
     }
     
     /// This will be the array of characters that will be consumed and used to render the `UI`
     ///
-    private(set) var filteredCharacters: [CharacterPresentationModel] = [] {
+    private var filteredCharacters: [CharacterPresentationModel] = [] {
         didSet { reload() }
     }
     
@@ -88,23 +76,35 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     /// `FilterCollectionView` Cells configuration.
     ///
     func configure(view: FilterItemView, at item: Int) {
-        let title = FilterState.allCases[item].rawValue
-        let isSelected = filterState?.rawValue == title ? true : false
+        let title = FilterState.allCases[item].title
+        let isSelected = filterState?.title == title ? true : false
         view.configure(with: title, isSelected: isSelected)
     }
     
     func title(at item: Int) -> String {
-        return FilterState.allCases[item].rawValue
+        return FilterState.allCases[item].title
     }
     
     func didSelectItem(at index: Int) {
         let selectedFilter = FilterState.allCases[index]
+        
+        /// Persist the `user-selected` filter option and then apply the filtration.
+        ///
         filterState = selectedFilter
         applyFilter(selectedFilter)
     }
     
-    func prefetch() {
-        fetchCharacters()
+    func prefetchRows(at indexPaths: [IndexPath]) {
+        /// `shouldPaginate` determines if any of the indexPaths
+        /// are hitting the item last-before the end-index by the specified `threshold`.
+        ///
+        let shouldPaginate = indexPaths.contains {
+            $0.row > filteredCharacters.count - CharactersConstants.paginationThreshold
+        }
+        
+        if shouldPaginate {
+            fetchCharacters()
+        }
     }
     
     // MARK: Private Implementations
@@ -114,15 +114,12 @@ final class DefaultCharactersPresenter: CharactersPresenter {
             do {
                 isLoading = true
                 
-                // TODO: Remove print at finish.
-                print("Fetching page number: \(currentPage)")
-                
                 let characters = try await fetchCharactersUseCase
                     .execute(at: currentPage)
                     .map(CharacterPresentationModel.init)
                 
                 isLoading = false
-                // TODO:
+                // TODO: fd
                 // Add has next page to make sure that the page does have a next to make sure of redundant api calls.
                 currentPage += 1
                 
