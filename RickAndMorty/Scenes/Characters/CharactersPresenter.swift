@@ -40,7 +40,7 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         didSet { setFilteredCharacters() }
     }
     
-    private var filterState: FilterState?
+    private var filterState: FilterState? { didSet { reload() } }
     
     // MARK: Public Properties
     
@@ -79,12 +79,18 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         fetchCharacters()
     }
     
+    /// `CharacterTableView` Cell's configuration.
+    ///
     func configure(view: CharacterItemView, at row: Int) {
         view.configure(with: filteredCharacters[row])
     }
     
+    /// `FilterCollectionView` Cells configuration.
+    ///
     func configure(view: FilterItemView, at item: Int) {
-        view.configure(with: FilterState.allCases[item].rawValue)
+        let title = FilterState.allCases[item].rawValue
+        let isSelected = filterState?.rawValue == title ? true : false
+        view.configure(with: title, isSelected: isSelected)
     }
     
     func title(at item: Int) -> String {

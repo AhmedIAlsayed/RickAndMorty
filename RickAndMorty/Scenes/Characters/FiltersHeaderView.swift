@@ -37,6 +37,7 @@ final class FiltersHeaderView: UITableViewHeaderFooterView {
     ) {
         filtersCollectionView.delegate = dataSourceDelegate
         filtersCollectionView.dataSource = dataSourceDelegate
+        filtersCollectionView.reloadData()
     }
     
     // MARK: Private Implementations

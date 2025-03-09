@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FilterItemView {
-    func configure(with title: String)
+    func configure(with title: String, isSelected: Bool)
 }
 
 class FilterCollectionViewCell: UICollectionViewCell, FilterItemView {
@@ -47,10 +47,17 @@ class FilterCollectionViewCell: UICollectionViewCell, FilterItemView {
         configureInterfaceElements()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        containerView.backgroundColor = .white
+    }
+    
     // MARK: Public Interface
     
-    func configure(with title: String) {
+    func configure(with title: String, isSelected: Bool) {
         titleLabel.text = title
+        titleLabel.backgroundColor = isSelected ? .systemIndigo.withAlphaComponent(0.15) : .white
     }
     
     // MARK: Private Implementations
