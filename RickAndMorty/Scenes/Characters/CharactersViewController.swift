@@ -55,6 +55,14 @@ final class CharactersViewController: UIViewController, CharacterView {
     private func configureNavigationBar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = presenter.title
+        
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.shadowColor = .clear
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
     }
     
     private func configureCharactersTableView() {
@@ -62,8 +70,8 @@ final class CharactersViewController: UIViewController, CharacterView {
         
         charactersTableView.dataSource = self
         charactersTableView.delegate = self
+        charactersTableView.prefetchDataSource = self
         charactersTableView.separatorStyle = .none
-        charactersTableView.showsVerticalScrollIndicator = false
         charactersTableView.translatesAutoresizingMaskIntoConstraints = false
         
         charactersTableView.register(
@@ -133,6 +141,20 @@ extension CharactersViewController: UITableViewDelegate {
     }
 }
 
+// MARK: TableView Prefetch DataSource
+
+extension CharactersViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let thresholdIndex = (presenter.characters.count - 2)
+        let shouldPaginate = indexPaths.contains { $0.row > thresholdIndex }
+        
+        if shouldPaginate {
+            presenter.prefetch()
+        }
+    }
+}
+
 // MARK: CollectionView DataSource
 
 extension CharactersViewController: UICollectionViewDataSource {
@@ -173,8 +195,7 @@ extension CharactersViewController: UICollectionViewDelegateFlowLayout {
         let font = UIFont.systemFont(ofSize: CharactersConstants.fontSize)
         let textWidth = title.size(withAttributes: [.font: font]).width
         
-        /// Multiplied by `2` since the padding is applied in both the leading and trailing edges and we
-        /// have the `UILabel text insets` to take into consideration also.
+        /// Multiplied by `2` since the padding is applied in both the leading and trailing edges.
         ///
         let cellWidth = textWidth + (CharactersConstants.filterCellPadding * 2)
         return CGSize(width: cellWidth, height: CharactersConstants.heightForHeader)

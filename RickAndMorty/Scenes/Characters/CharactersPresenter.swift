@@ -18,6 +18,7 @@ protocol CharactersPresenter: AnyObject {
     func configure(view: CharacterItemView, at row: Int)
     func configure(view: FilterItemView, at item: Int)
     func title(at item: Int) -> String
+    func prefetch()
     func didSelectItem(at index: Int)
 }
 
@@ -30,6 +31,8 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     /// An integer that captures the state of the `currently fetched page` from our endpoint.
     ///
     private var currentPage: Int = 1
+    
+    private var isLoading: Bool = false
     
     private(set) var characters: [CharacterPresentationModel] = [] {
         didSet { reload() }
@@ -83,18 +86,29 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         fetchCharacters(filter: filter)
     }
     
+    func prefetch() {
+        fetchCharacters()
+    }
+    
     // MARK: Private Implementations
     
     private func fetchCharacters(filter: String? = nil) {
         Task(priority: .background) {
             do {
-                characters = try await fetchCharactersUseCase
+                isLoading = true
+                print("Fetching page number: \(currentPage)")
+                
+                let characters = try await fetchCharactersUseCase
                     .execute(at: currentPage, filter: filter)
                     .map(CharacterPresentationModel.init)
+                
+                isLoading = false
+                self.characters.append(contentsOf: characters)
                 
                 currentPage += 1
             }
             catch {
+                isLoading = false
                 // TODO: Handle error!!! ❌
                 print(error)
             }

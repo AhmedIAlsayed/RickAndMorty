@@ -19,7 +19,10 @@ public class DefaultCharactersRepository: CharactersRepository {
     public func fetchCharacters(at page: Int, filter: String? = nil) async throws -> [Domain.Character] {
         guard
             let url = URL(string: "https://rickandmortyapi.com/api/character")?
-                .appending(queryItems: [.init(name: "filter", value: filter)])
+                .appending(queryItems: [
+                    .init(name: "page", value: page.description),
+                    .init(name: "filter", value: filter)
+                ])
         else { return [] }
         
         do {
@@ -30,6 +33,10 @@ public class DefaultCharactersRepository: CharactersRepository {
                 .decode(Wrapper.self, from: data)
                 .results
                 .map { $0.toDomain }
+        }
+        catch {
+            print(error.localizedDescription)
+            throw error
         }
     }
 }
