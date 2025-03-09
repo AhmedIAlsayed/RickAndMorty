@@ -16,10 +16,14 @@ public class DefaultCharactersRepository: CharactersRepository {
     //
     public init() { }
     
-    public func fetchCharacters(at page: Int) async throws -> [Domain.Character] {
-        guard let url = URL(string: "https://rickandmortyapi.com/api/character") else { return [] }
+    public func fetchCharacters(at page: Int, filter: String? = nil) async throws -> [Domain.Character] {
+        guard
+            let url = URL(string: "https://rickandmortyapi.com/api/character")?
+                .appending(queryItems: [.init(name: "filter", value: filter)])
+        else { return [] }
         
         do {
+            
             let (data, _) = try await URLSession.shared.data(from: url)
             
             return try JSONDecoder()
