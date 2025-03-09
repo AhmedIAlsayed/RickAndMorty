@@ -100,7 +100,7 @@ final class CharactersViewController: UIViewController, CharacterView {
 extension CharactersViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.characters.count
+        presenter.filteredCharacters.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -151,7 +151,7 @@ extension CharactersViewController: UITableViewDelegate {
 extension CharactersViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        let thresholdIndex = (presenter.characters.count - 2)
+        let thresholdIndex = (presenter.filteredCharacters.count - 2)
         let shouldPaginate = indexPaths.contains { $0.row > thresholdIndex }
         
         if shouldPaginate {

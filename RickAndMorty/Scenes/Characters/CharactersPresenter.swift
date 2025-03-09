@@ -11,7 +11,7 @@ import Domain
 protocol CharactersPresenter: AnyObject {
     var view: CharacterView? { get set }
     var title: String { get }
-    var characters: [CharacterPresentationModel] { get }
+    var filteredCharacters: [CharacterPresentationModel] { get }
     var filtersCount: Int { get }
     
     func viewDidLoad()
@@ -34,9 +34,13 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     private var isLoading: Bool = false
     
-    private(set) var characters: [CharacterPresentationModel] = [] {
-        didSet { reload() }
+    /// This will be considered the `in-memory cache` for when any fetching operation occurs.
+    ///
+    private var inMemoryCharacters: [CharacterPresentationModel] = [] {
+        didSet { setFilteredCharacters() }
     }
+    
+    private var filterState: FilterState?
     
     // MARK: Public Properties
     
@@ -57,6 +61,12 @@ final class DefaultCharactersPresenter: CharactersPresenter {
         return FilterState.allCases.count
     }
     
+    /// This will be the array of characters that will be consumed and used to render the `UI`
+    ///
+    private(set) var filteredCharacters: [CharacterPresentationModel] = [] {
+        didSet { reload() }
+    }
+    
     // MARK: Constructor
     
     init(fetchCharactersUseCase: FetchCharactersUseCase) {
@@ -70,7 +80,7 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     }
     
     func configure(view: CharacterItemView, at row: Int) {
-        view.configure(with: characters[row])
+        view.configure(with: filteredCharacters[row])
     }
     
     func configure(view: FilterItemView, at item: Int) {
@@ -82,8 +92,9 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     }
     
     func didSelectItem(at index: Int) {
-        let filter = FilterState.allCases[index].rawValue
-        fetchCharacters(filter: filter)
+        let selectedFilter = FilterState.allCases[index]
+        filterState = selectedFilter
+        applyFilter(selectedFilter)
     }
     
     func prefetch() {
@@ -92,26 +103,45 @@ final class DefaultCharactersPresenter: CharactersPresenter {
     
     // MARK: Private Implementations
     
-    private func fetchCharacters(filter: String? = nil) {
+    private func fetchCharacters() {
         Task(priority: .background) {
             do {
                 isLoading = true
+                
+                // TODO: Remove print at finish.
                 print("Fetching page number: \(currentPage)")
                 
                 let characters = try await fetchCharactersUseCase
-                    .execute(at: currentPage, filter: filter)
+                    .execute(at: currentPage)
                     .map(CharacterPresentationModel.init)
                 
                 isLoading = false
-                self.characters.append(contentsOf: characters)
-                
+                // TODO:
+                // Add has next page to make sure that the page does have a next to make sure of redundant api calls.
                 currentPage += 1
+                
+                inMemoryCharacters.append(contentsOf: characters)
             }
             catch {
                 isLoading = false
                 // TODO: Handle error!!! ❌
                 print(error)
             }
+        }
+    }
+    
+    private func setFilteredCharacters() {
+        if let filterState {
+            applyFilter(filterState)
+        }
+        else {
+            filteredCharacters = inMemoryCharacters
+        }
+    }
+    
+    private func applyFilter(_ filter: FilterState) {
+        filteredCharacters = inMemoryCharacters.filter {
+            $0.subtitle.lowercased().contains(filter.rawValue.lowercased())
         }
     }
     
