@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 protocol Coordinator {
     func start()
@@ -33,12 +34,11 @@ final class DefaultCoordinator: Coordinator {
     }
     
     func navigateToDetails(with character: CharacterPresentationModel) {
-        // TODO: !!
-        // 1. Have the DetailsFactory create the SwiftUI scene with it's dependencies and push it to the
-        // navigation stack.
-        // 2. Remove the DetailsViewController since it's useless.
-        // 
-        // let hostingController = UIHostingController<DetailsView>(rootViewController: )
-        navigationController?.pushViewController(DetailsViewController(character: character), animated: true)
+        let characterInformationViewModel = CharacterInformationViewModel(character: character)
+        let characterInformationView = CharacterInformationView(viewModel: characterInformationViewModel)
+        
+        let characterInformationViewController = UIHostingController.init(rootView: characterInformationView)
+        characterInformationViewController.modalPresentationStyle = .popover
+        navigationController?.present(characterInformationViewController, animated: true)
     }
 }
