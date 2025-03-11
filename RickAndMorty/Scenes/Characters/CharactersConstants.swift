@@ -10,6 +10,7 @@ import Foundation
 struct CharactersConstants {
     
     static let title: String = "Characters"
+    static let location: String = "Location"
     
     /// ``Character TableView Cell``
     ///

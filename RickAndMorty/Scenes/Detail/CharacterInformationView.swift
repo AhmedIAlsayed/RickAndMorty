@@ -81,10 +81,10 @@ struct CharacterInformationView: View {
         Text(viewModel.character.status)
             .font(.caption)
             .foregroundColor(.white)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 16)
             .padding(.vertical, 6)
             .frame(height: 30)
-            .background(Color.blue)
+            .background(Color.cyan)
             .clipShape(RoundedRectangle(cornerRadius: 15))
     }
     
@@ -101,14 +101,14 @@ struct CharacterInformationView: View {
             .foregroundColor(.gray)
     }
     
-    /// ``Container Stack Views``
-    ///
     private var locationTextView: some View {
-        Text("Location: \(viewModel.character.location)")
-            .font(.headline)
+        Text("\(CharactersConstants.location) : \(viewModel.character.location)")
+            .font(.subheadline)
             .foregroundColor(.black)
     }
     
+    /// ``Container Stack Views``
+    ///
     private var infoVStack: some View {
         VStack(alignment: .leading, spacing: 8) {
             topSectionHStack
@@ -140,11 +140,8 @@ struct CharacterInformationView: View {
     }
     
     private func loadImage() {
-        imageLoader.load(
-            image: viewModel.character.imageURLString,
-            completion: { _image in
-                if let _image { DispatchQueue.main.async { image = _image } }
-            }
-        )
+        imageLoader.load(image: viewModel.character.imageURLString, completion: { _image in
+            if let _image { DispatchQueue.main.async { image = _image } }
+        })
     }
 }
