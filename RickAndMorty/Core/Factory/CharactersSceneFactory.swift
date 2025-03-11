@@ -8,6 +8,7 @@
 import UIKit
 import Domain
 import Data
+import Network
 
 protocol CharactersSceneFactory {
     func createCharactersScene(with coordinator: Coordinator) -> CharactersViewController
@@ -40,6 +41,12 @@ final class DefaultCharactersSceneFactory: CharactersSceneFactory {
     }
     
     private func createCharactersRepository() -> CharactersRepository {
-        return DefaultCharactersRepository()
+        let networkManager = createNetworkManager()
+        return DefaultCharactersRepository(networkManager: networkManager)
+    }
+    
+    private func createNetworkManager() -> NetworkManager {
+        let decoder = JSONDecoder()
+        return DefaultNetworkManager(jsonDecoder: decoder)
     }
 }

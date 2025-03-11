@@ -78,13 +78,14 @@ struct CharacterInformationView: View {
     }
     
     private var statusTextView: some View {
-        Text("Status")
+        Text(viewModel.character.status)
             .font(.caption)
             .foregroundColor(.white)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
+            .frame(height: 30)
             .background(Color.blue)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 15))
     }
     
     private var titleTextView: some View {
@@ -95,13 +96,15 @@ struct CharacterInformationView: View {
     }
     
     private var subtitleTextView: some View {
-        Text("\(viewModel.character.subtitle) • Male")
+        Text("\(viewModel.character.subtitle) • \(viewModel.character.gender)")
             .font(.subheadline)
             .foregroundColor(.gray)
     }
     
+    /// ``Container Stack Views``
+    ///
     private var locationTextView: some View {
-        Text("Location: Earth")
+        Text("Location: \(viewModel.character.location)")
             .font(.headline)
             .foregroundColor(.black)
     }

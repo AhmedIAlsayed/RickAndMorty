@@ -13,12 +13,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Domain")
+        .package(path: "../Domain"),
+        .package(path: ".../Network")
     ],
     targets: [
         .target(
             name: "Data",
-            dependencies: ["Domain"]
+            dependencies: ["Domain", "Network"]
         )
     ]
 )

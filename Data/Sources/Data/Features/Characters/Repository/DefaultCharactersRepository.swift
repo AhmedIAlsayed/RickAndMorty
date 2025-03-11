@@ -7,29 +7,42 @@
 
 import Domain
 import Foundation
+import Network
+
+struct Constants {
+    static let endpoint: String = "https://rickandmortyapi.com/api/character"
+    static let queryPageKey: String = "page"
+}
 
 public class DefaultCharactersRepository: CharactersRepository {
     
-    // TODO: Add a remote service or a network layer.
-    // If a network layer directly, then explain.
-    // If not, then add a remote service and explain also the dependency graph and the flow of control.
-    //
-    public init() { }
+    /// ``External Dependency``
+    ///
+    private let networkManager: NetworkManager
+    
+    // MARK: Constructor
+    
+    public init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
+    }
+    
+    // MARK: Public Interface
     
     public func fetchCharacters(at page: Int) async throws -> [Domain.Character] {
-        guard
-            let url = URL(string: "https://rickandmortyapi.com/api/character")?
-                .appending(queryItems: [.init(name: "page", value: page.description)])
-        else { return [] }
-        
         do {
+            /// The logic related to building a request can be separated into a `RequestBuilder` type for separation of concerns.
+            /// But out of simplicity of the feature, I'm keeping it straight-forward.
+            ///
+            guard let url = URL(string: Constants.endpoint)?.appending(
+                queryItems: [URLQueryItem(name: Constants.queryPageKey, value: page.description)]
+            ) else {
+                throw NetworkError.badURL
+            }
             
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let request = URLRequest(url: url)
             
-            return try JSONDecoder()
-                .decode(Wrapper.self, from: data)
-                .results
-                .map { $0.toDomain }
+            let result: CharacterWrapperDTO = try await networkManager.execute(request: request)
+            return result.results.map { $0.toDomain }
         }
         catch {
             print(error.localizedDescription)

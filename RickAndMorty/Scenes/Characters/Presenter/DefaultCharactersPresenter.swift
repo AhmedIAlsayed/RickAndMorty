@@ -128,15 +128,15 @@ final class DefaultCharactersPresenter: CharactersPresenter {
                     .map(CharacterPresentationModel.init)
                 
                 isLoading = false
-                // TODO: fd
-                // Add has next page to make sure that the page does have a next to make sure of redundant api calls.
                 currentPage += 1
                 
                 inMemoryCharacters.append(contentsOf: characters)
             }
             catch {
                 isLoading = false
-                // TODO: Handle error!!! ❌
+                
+                /// Error can be displayed in a user-friendly manner.
+                ///
                 print(error)
             }
         }
