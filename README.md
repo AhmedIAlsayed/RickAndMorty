@@ -20,11 +20,11 @@ Architectural Decisions & Implementation Details
 	-	This ensured a user-centric flow, refining dependencies as the implementation evolved.
 
 5. Filters Collection View Placement
-  - The filters are placed inside a header view to provide a better scrolling experience. 🚀
+  	- 	The filters are placed inside a header view to provide a better scrolling experience. 🚀
 
 6. Image Loader Simplification
-  - Modeled as a singleton with thread-safety considerations in place for concurrent image requests and cancelation.  
-	-	No error handling was added for the image loading. Failure states we're simply modeled as nil, while success returns the image.
+  	- 	Modeled as a singleton with thread-safety considerations in place for concurrent image requests and cancelation.
+  	- 	No error handling was added for the image loading. Failure states we're simply modeled as nil, while success returns the image.
 
 7. View Controller Organization
-	-	The ViewController could have been split into multiple files for extra organization, but I kept them in a single file for the simplicity of this project.
+	- 	The ViewController could have been split into multiple files for extra organization, but I kept them in a single file for the simplicity of this project.
